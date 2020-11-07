@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/css/bootstrap.css">
+    <style>
+        .container-fluid .col-sm-10>p {
+            background-color: #F5F5F5;
+            padding: .8rem;
+            color: #A08388;
+        }
+
+        .search {
+            border: 1px solid #E8E8E8;
+        }
+
+        .search p {
+            background-color: #F5F5F5;
+            padding: .8rem;
+            color: #596164;
+        }
+
+        .search input {
+            width: 200px;
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body>
+    <%- include('../common/header.ejs') -%>
+    <div class="container-fluid">
+        <div class="col-sm-2">
+            <%- include('../common/aside.ejs') -%>
+        </div>
+        <div class="col-sm-10">
+            <p><span>商品管理</span> / <span>商品列表</span></p>
+            <div class="search">
+                <p>搜索</p>
+                <form style="padding:0 0 10px 20px" action="/admin/searchuser?page=<%=page%>">
+                    <span style="font-weight: 700;">名称</span>
+                    <input type="text" class="form-control" placeholder="用户名或电子邮件" name="username">
+                    <button type="submit" class="btn btn-default">开始搜索</button>
+                </form>
+            </div>
+            <table class="table table-striped" style="margin: 0;">
+                <thead>
+                    <tr>
+                        <th>编号</th>
+                        <th>姓名</th>
+                        <th>年龄</th>
+                        <th>性别</th>
+                        <th>地址</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <% for(var i = 0;i<lists.length;i++){%>
+                    <tr>
+                        <td><%=i+1%></td>
+                        <td><%=lists[i].username%></td>
+                        <td><%=lists[i].age%></td>
+                        <td><%=lists[i].sex%></td>
+                        <td><%=lists[i].address%></td>
+                        <td>
+                            <a href="http://localhost:9527/admin/edituser?id=<%=lists[i]._id%>"
+                                class="btn btn-success">修改</a>
+                            <a href="javascript:;" class="btn btn-danger delete" data-toggle="modal"
+                                data-target="#myModal" data-id="<%=lists[i]._id%>">删除</a>
+                        </td>
+                    </tr>
+                    <%}%>
+                </tbody>
+            </table>
+            <div>
+                <ul class="pagination">
+                    <li><span>总共 <%=total%> 条数据</span></li>
+                    <li><a href="/admin/userlist?page=1">首页</a></li>
+                    <li class="<%=page==1?'disabled':''%>"><a href="/admin/userlist?page=<%=page-1%>">上一页</a></li>
+                    <%for(var i = 0;i<totalpage;i++){%>
+                    <li class="<%=page==i+1?'active':''%>"><a href="/admin/userlist?page=<%=i+1%>"><%=i+1%></a></li>
+                    <%}%>
+                    <li class="<%=page==totalpage?'disabled':''%>"><a
+                        href="/admin/userlist?page=<%=page<totalpage?page+1:totalpage%>">下一页</a></li>
+                    <li><a href="/admin/userlist?page=<%=totalpage%>">尾页</a></li>
+                    </ul>
+        </div>
+    </div>
+    </div>
+    <!-- 点击删除模态框 -->
+    <div class="modal fade" id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="/admin/deleteuser" method="post">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">提示</h4>
+                    </div>
+                    <div class="modal-body">
+                        亲！您确定要删除吗?
+                        <input type="hidden" name="id" id="userId">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-default">不删除留着过年?</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">再等等</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="/js/jquery-3.4.1.js"></script>
+    <script src="/js/bootstrap.js"></script>
+
+
+    <script>
+        $('.delete').on('click',function(){
+            $('#userId').val($(this).attr('data-id'))
+        })
+    </script>
+</body>
+
+</html>

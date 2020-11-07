@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/css/bootstrap.css">
+    <style>
+        .container-fluid .col-sm-10>p {
+            background-color: #F5F5F5;
+            padding: .8rem;
+            color: #A08388;
+        }
+
+        .search {
+            border: 1px solid #E8E8E8;
+        }
+
+        .search p {
+            background-color: #F5F5F5;
+            padding: .8rem;
+            color: #596164;
+        }
+
+        .search input {
+            width: 200px;
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body>
+    <%- include('../common/header.ejs') -%>
+    <div class="container-fluid">
+        <div class="col-sm-2">
+            <%- include('../common/aside.ejs') -%>
+        </div>
+        <div class="col-sm-10">
+            <p><span>商品管理</span> / <span>商品列表</span></p>
+            <div class="search">
+                <p>搜索</p>
+                <form style="padding:0 0 10px 20px" action="/admin/productsearch">
+                    <span style="font-weight: 700;">名称</span>
+                    <input type="text" class="form-control" name="title">
+                    <input type="text" class="form-control" name="price1" placeholder="最小价位">
+                    <input type="text" class="form-control" name="price2" placeholder="最大价位">
+                    <button type="submit" class="btn btn-default">开始搜索</button>
+                </form>
+            </div>
+            <table class="table table-striped" style="margin: 0;">
+                <thead>
+                    <tr>
+                        <th>编号</th>
+                        <th>名称</th>
+                        <th>图标</th>
+                        <th>一级分类</th>
+                        <th>二级分类</th>
+                        <th>价格</th>
+                        <th>邮费</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <%for(var i = 0;i<productlist.length;i++){%>
+                    <tr>
+                        <td><%=i+1%></td>
+                        <td><%=productlist[i].title%></td>
+                        <td>
+                            <img src="<%=productlist[i].pic%>" alt="" style="width:50px;">
+                        </td>
+                        <td><%=productlist[i].cate_id%></td>
+                        <td><%=productlist[i].goods_id%></td>
+                        <td><%=productlist[i].price + '元'%></td>
+                        <td><%=productlist[i].stamp%></td>
+                        <td>
+                            <a href="/admin/productedit?id=<%=productlist[i]._id%>" class="btn btn-info">修改</a>
+                            <a href="/admin/productdelete?id=<%=productlist[i]._id%>" class="btn btn-danger">删除</a>
+                        </td>
+                    </tr>
+                    <%}%>
+                </tbody>
+                
+            </table>
+            <div>
+                    <ul class="pagination">
+                        <li><span>总共 <%=total%> 条数据</span></li>
+                    <li><a href="/admin/productlist?page=1">首页</a></li>
+                    <li class="<%=page==1?'disabled':''%>"><a href="/admin/productlist?page=<%=page-1%>">上一页</a></li>
+                    <%for(var i = 0;i<totalpage;i++){%>
+                    <li class="<%=page==i+1?'active':''%>"><a href="/admin/productlist?page=<%=i+1%>"><%=i+1%></a></li>
+                    <%}%>
+                        <li class="<%=page==totalpage?'disabled':''%>"><a
+                        href="/admin/productlist?page=<%=page<totalpage?page+1:totalpage%>">下一页</a></li>
+                    <li><a href="/admin/productlist?page=<%=totalpage%>">尾页</a></li>
+                    </ul>
+        </div>
+    </div>
+    </div>
+
+
+    <script src="/js/jquery-3.4.1.js"></script>
+    <script src="/js/bootstrap.js"></script>
+</body>
+
+</html>
